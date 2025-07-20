@@ -1,11 +1,18 @@
 {
-  "name": "chrome-extension",
-  "version": "0.1.0",
+  "name": "daily-boost-chrome-extension",
+  "version": "1.0.0",
+  "description": "Get daily motivation quotes and weather updates to boost your productivity!",
+  "author": "Your Name",
   "private": true,
+  "homepage": ".",
   "dependencies": {
+    "@chakra-ui/react": "^3.22.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "framer-motion": "^12.23.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -13,9 +20,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run post-build",
+    "post-build": "node scripts/post-build.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-extension": "npm run build && echo Extension built successfully! Check the build folder."
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +43,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "keywords": [
+    "chrome-extension",
+    "motivation",
+    "weather",
+    "productivity",
+    "quotes",
+    "daily-boost"
+  ]
 }

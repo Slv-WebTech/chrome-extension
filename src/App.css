@@ -1,38 +1,261 @@
-.App {
-  text-align: center;
+/* Global reset for margin, padding, and box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Base styles for body */
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+/* Dark mode background */
+body.dark-mode {
+  background-color: #121212;
+  /* Dark theme */
+  color: #fff;
+}
+
+/* Light mode background */
+body.light-mode {
+  background-color: #f0f0f0;
+  /* Light theme */
+  color: #121212;
+  /* Dark text */
+}
+
+/* Glassmorphism Card Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  /* Semi-transparent white background */
+  backdrop-filter: blur(10px);
+  /* Frosted glass effect */
+  border-radius: 16px;
+  /* Rounded corners */
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Soft shadow */
+  width: 300px;
+  max-width: 100%;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Hover effect for the card */
+.glass-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Typography for the title */
+.glass-card h1,
+.glass-card h2 {
+  color: #00f2ff;
+  /* Cyan text */
+  font-family: 'Orbitron', sans-serif;
+  /* Futuristic font */
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+/* Typography for body text */
+.glass-card p {
+  color: #fff;
+  /* White text */
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Button styles */
+.glass-button {
+  background-color: #00f2ff;
+  /* Neon cyan background */
+  color: #121212;
+  /* Dark text */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect for buttons */
+.glass-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Input fields with glass effect */
+.glass-input {
+  background: rgba(255, 255, 255, 0.2);
+  /* Semi-transparent white */
+  backdrop-filter: blur(8px);
+  /* Frosted glass */
+  border-radius: 8px;
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Header styles with a tech look */
+header {
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+header h1 {
+  color: #00f2ff;
+  /* Cyan for tech feel */
+  font-family: 'Orbitron', sans-serif;
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+/* Footer for technology theme */
+footer {
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Glass effect for modal */
+.glass-modal {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 500px;
+}
+
+/* Additional glass effect for elements with rounded edges */
+.glass-element {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Tech buttons with hover effect */
+.tech-button {
+  background-color: #0a74da;
+  /* Tech blue */
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tech-button:hover {
+  background-color: #006bb3;
+}
+
+/* Footer text */
+footer p {
+  color: #888;
+  font-size: 0.8rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Switch styles for light/dark mode toggle */
+.mode-switch {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #00f2ff;
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.mode-switch span {
+  margin-left: 10px;
   color: white;
+  font-size: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .glass-card {
+    width: 100%;
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* More enhancements for modern visual appeal */
+.glass-card,
+.glass-input,
+.glass-button,
+.glass-modal,
+.glass-element {
+  transition: all 0.3s ease;
+  /* Smooth transitions */
+}
+
+body.light-mode .glass-card {
+  background: rgba(0, 0, 0, 0.1);
+  /* Light mode glass card effect */
+}
+
+body.dark-mode .glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  /* Dark mode glass card effect */
+}
+
+
+/* Glass effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin: 20px;
+}
+
+/* Light/Dark Mode */
+body.light-mode {
+  background-color: #f0f0f0;
+  color: #121212;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
 }
