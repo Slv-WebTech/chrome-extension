@@ -1,0 +1,9 @@
+{
+    "eslint.useESLintClass": true,
+    "eslint.useFlatConfig": false,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.codeAction.showDocumentation": {
+        "enable": true
+    }
+}

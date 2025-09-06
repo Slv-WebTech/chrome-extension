@@ -3,6 +3,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Additional reset to prevent scrollbars */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Base styles for body */
@@ -13,44 +22,81 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   transition: all 0.3s ease;
+  /* Full screen background image */
+  background-image: url('https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  /* Add overlay for better readability */
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Add overlay for better text readability */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: -1;
 }
 
 /* Dark mode background */
 body.dark-mode {
-  background-color: #121212;
-  /* Dark theme */
   color: #fff;
+  /* Keep the background image but adjust overlay */
+}
+
+body.dark-mode::before {
+  background: rgba(0, 0, 0, 0.6);
+  /* Darker overlay for dark mode */
 }
 
 /* Light mode background */
 body.light-mode {
-  background-color: #f0f0f0;
-  /* Light theme */
   color: #121212;
   /* Dark text */
 }
 
+body.light-mode::before {
+  background: rgba(255, 255, 255, 0.3);
+  /* Lighter overlay for light mode */
+}
+
 /* Glassmorphism Card Effect */
 .glass-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
   /* Semi-transparent white background */
-  backdrop-filter: blur(10px);
-  /* Frosted glass effect */
-  border-radius: 16px;
-  /* Rounded corners */
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  /* Soft shadow */
-  width: 300px;
+  backdrop-filter: blur(20px);
+  /* Enhanced frosted glass effect */
+  -webkit-backdrop-filter: blur(20px);
+  /* Safari support */
+  border-radius: 20px;
+  /* More rounded corners */
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Enhanced shadow */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Subtle border */
+  width: 320px;
   max-width: 100%;
-  transition: box-shadow 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  z-index: 1;
 }
 
 /* Hover effect for the card */
 .glass-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
 }
 
 /* Typography for the title */
@@ -97,16 +143,25 @@ body.light-mode {
 .glass-input {
   background: rgba(255, 255, 255, 0.2);
   /* Semi-transparent white */
-  backdrop-filter: blur(8px);
-  /* Frosted glass */
-  border-radius: 8px;
-  padding: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px);
+  /* Enhanced frosted glass */
+  -webkit-backdrop-filter: blur(15px);
+  /* Safari support */
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   width: 100%;
   margin-bottom: 20px;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  outline: none;
+  border: 1px solid rgba(0, 242, 255, 0.6);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Header styles with a tech look */
@@ -126,36 +181,45 @@ header h1 {
 
 /* Footer for technology theme */
 footer {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
+  left: 0;
+  right: 0;
   text-align: center;
   width: 100%;
   font-size: 0.8rem;
   color: #777;
+  z-index: 100;
+  max-width: 100vw;
 }
 
 /* Glass effect for modal */
 .glass-modal {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
+  width: 85%;
   max-width: 500px;
+  z-index: 1000;
 }
 
 /* Additional glass effect for elements with rounded edges */
 .glass-element {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Tech buttons with hover effect */
@@ -191,9 +255,11 @@ footer p {
   padding: 10px;
   border-radius: 50px;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
+  z-index: 1000;
+  max-width: calc(100vw - 40px);
 }
 
 .mode-switch span {
@@ -206,15 +272,36 @@ footer p {
 @media (max-width: 768px) {
   body {
     padding: 10px;
+    background-attachment: scroll;
+    /* Adjust background for mobile */
   }
 
   .glass-card {
-    width: 100%;
-    padding: 15px;
+    width: 95%;
+    padding: 20px;
+    margin: 10px;
   }
 
   header h1 {
     font-size: 2rem;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 480px) {
+  .glass-card {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  .glass-modal {
+    width: 95%;
+    padding: 25px;
   }
 }
 
@@ -229,33 +316,13 @@ footer p {
 }
 
 body.light-mode .glass-card {
-  background: rgba(0, 0, 0, 0.1);
-  /* Light mode glass card effect */
+  background: rgba(255, 255, 255, 0.25);
+  /* Enhanced light mode glass card effect */
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 body.dark-mode .glass-card {
   background: rgba(255, 255, 255, 0.1);
-  /* Dark mode glass card effect */
-}
-
-
-/* Glass effect */
-.glass-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  margin: 20px;
-}
-
-/* Light/Dark Mode */
-body.light-mode {
-  background-color: #f0f0f0;
-  color: #121212;
-}
-
-body.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
+  /* Enhanced dark mode glass card effect */
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
