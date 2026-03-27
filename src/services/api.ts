@@ -10,21 +10,34 @@ validateApiKeys();
 
 // Types for API responses
 export interface WeatherData {
-    location: {
-        name: string;
-        country: string;
-        region: string;
+    name: string;
+    coord: {
+        lon: number;
+        lat: number;
     };
-    current: {
-        temp_c: number;
-        temp_f: number;
-        condition: {
-            text: string;
-            icon: string;
-        };
+    weather: Array<{
+        main: string;
+        description: string;
+        icon: string;
+    }>;
+    main: {
+        temp: number;
+        feels_like: number;
+        temp_min: number;
+        temp_max: number;
+        pressure: number;
         humidity: number;
-        wind_kph: number;
-        wind_mph: number;
+    };
+    clouds: {
+        all: number;
+    };
+    wind: {
+        speed: number;
+        deg?: number;
+        gust?: number;
+    };
+    sys: {
+        country: string;
     };
 }
 
@@ -88,16 +101,26 @@ const { WEATHER, UNSPLASH, PEXELS, QUOTES, IP_LOCATION, TIMEOUTS, DEFAULTS } = A
  */
 async function apiFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
     try {
+        const method = (options.method || 'GET').toUpperCase();
+        const headers: Record<string, string> = {
+            ...(options.headers as Record<string, string> | undefined),
+        };
+
+        // Only send Content-Type when a request body is present.
+        // Adding it to GET can trigger a preflight request that some APIs reject.
+        if (options.body && !headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
+
         const response = await fetch(url, {
             ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
-            },
+            method,
+            headers,
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status} ${errorText}`);
         }
 
         return await response.json();
@@ -115,7 +138,7 @@ export const weatherAPI = {
      * Get weather by coordinates
      */
     async getWeatherByCoords(lat: number, lon: number): Promise<WeatherData> {
-        const url = `${WEATHER.BASE_URL}/current.json?key=${WEATHER.KEY}&q=${lat},${lon}&aqi=no`;
+        const url = `${WEATHER.BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch<WeatherData>(url);
     },
 
@@ -123,7 +146,7 @@ export const weatherAPI = {
      * Get weather by city name
      */
     async getWeatherByCity(city: string): Promise<WeatherData> {
-        const url = `${WEATHER.BASE_URL}/current.json?key=${WEATHER.KEY}&q=${encodeURIComponent(city)}&aqi=no`;
+        const url = `${WEATHER.BASE_URL}/weather?q=${encodeURIComponent(city)}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch<WeatherData>(url);
     },
 
@@ -131,7 +154,7 @@ export const weatherAPI = {
      * Get weather forecast (optional extension)
      */
     async getForecast(location: string, days: number = 3): Promise<any> {
-        const url = `${WEATHER.BASE_URL}/forecast.json?key=${WEATHER.KEY}&q=${encodeURIComponent(location)}&days=${days}&aqi=no&alerts=no`;
+        const url = `${WEATHER.BASE_URL}/forecast?q=${encodeURIComponent(location)}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch(url);
     },
 };
@@ -144,15 +167,21 @@ export const quotesAPI = {
      * Get random quote from FreeAPI
      */
     async getRandomQuote(): Promise<QuoteData> {
-        const url = `${QUOTES.BASE_URL}/quote/random`;
-        const response = await apiFetch<FreeAPIQuoteResponse>(url);
+        try {
+            const url = `${QUOTES.BASE_URL}/quote/random`;
+            const response = await apiFetch<FreeAPIQuoteResponse>(url);
 
-        // Transform FreeAPI response to our QuoteData format
-        return {
-            content: response.data.content,
-            author: response.data.author,
-            tags: response.data.tags,
-        };
+            // Transform FreeAPI response to our QuoteData format
+            return {
+                content: response.data.content,
+                author: response.data.author,
+                tags: response.data.tags,
+            };
+        } catch {
+            // Some extension contexts block third-party fetch unless host permissions are granted.
+            // Fall back to default quote so the UI remains stable without runtime noise.
+            return DEFAULTS.QUOTE;
+        }
     },
 
     /**

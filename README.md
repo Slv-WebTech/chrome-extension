@@ -1,36 +1,200 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chrome Extension Dashboard UI
 
-## Getting Started
+## Project Summary
 
-First, run the development server:
+A Chrome extension productivity dashboard (new-tab style UI) built with Next.js that combines weather, quotes, todos, and dynamic backgrounds with user preferences managed through Redux and external API integrations.
+
+A customizable Chrome extension dashboard UI built with Next.js, TypeScript, Redux Toolkit, and Tailwind CSS.
+
+The app includes:
+
+- Weather widget with city search or current location
+- Inspirational quote section
+- Todo list
+- Dynamic background image source selection (Unsplash, Pexels, or custom URL)
+- Theme and preference settings persisted in app state
+
+## Tech Stack
+
+- Next.js 16 (App Router + Turbopack)
+- React 19
+- TypeScript
+- Redux Toolkit + React Redux + redux-persist
+- Tailwind CSS
+- Radix UI primitives and related UI libraries
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm 10+
+
+## Setup
+
+1. Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create a .env.local file in the project root and add your API keys:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+NEXT_PUBLIC_WEATHER_API_KEY=your_openweather_key
+NEXT_PUBLIC_WEATHER_BASE_URL=https://api.openweathermap.org/data/2.5
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
+NEXT_PUBLIC_PEXELS_API_KEY=your_pexels_api_key
+```
 
-## Learn More
+Notes:
 
-To learn more about Next.js, take a look at the following resources:
+- If keys are missing, parts of the app may fall back to demo behavior or show warnings.
+- Quotes and IP-based location APIs are configured without keys in current defaults.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Key Matrix
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable                        | Purpose                               | Required                            | Default/Fallback                        |
+| ------------------------------- | ------------------------------------- | ----------------------------------- | --------------------------------------- |
+| NEXT_PUBLIC_WEATHER_API_KEY     | OpenWeather current weather API       | Yes (for weather feature)           | demo-key (weather may fail)             |
+| NEXT_PUBLIC_WEATHER_BASE_URL    | Weather API base URL                  | No                                  | https://api.openweathermap.org/data/2.5 |
+| NEXT_PUBLIC_UNSPLASH_ACCESS_KEY | Unsplash random/search photos         | Optional (if using Unsplash source) | demo-key (may fail)                     |
+| NEXT_PUBLIC_PEXELS_API_KEY      | Pexels image search/curated photos    | Optional (if using Pexels source)   | demo-key (may fail)                     |
+| WEATHER_KEY                     | Server-side fallback weather key      | Optional                            | demo-key                                |
+| WEATHER_BASE_URL                | Server-side fallback weather base URL | Optional                            | OpenWeather default                     |
 
-## Deploy on Vercel
+Recommendation:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- For a fully working dashboard, set at least NEXT_PUBLIC_WEATHER_API_KEY and one image provider key.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Run Locally
+
+Start development server:
+
+```bash
+pnpm dev
+```
+
+Default local URL:
+
+- http://localhost:5000
+
+## Build and Start
+
+Create production build:
+
+```bash
+pnpm build
+```
+
+Start production server:
+
+```bash
+pnpm start
+```
+
+## Chrome Extension Usage
+
+### Development Mode
+
+1. Run the UI locally:
+
+```bash
+pnpm dev
+```
+
+2. Use this local URL while developing extension UI behavior:
+
+- http://localhost:5000
+
+### Build Mode
+
+1. Create production assets:
+
+```bash
+pnpm build
+```
+
+2. Start production preview server (optional):
+
+```bash
+pnpm start
+```
+
+### Load as Extension
+
+To load this in Chrome as an unpacked extension, you need a valid extension wrapper (including manifest.json) that points to this UI build/runtime.
+
+Current repository note:
+
+- This repo focuses on the dashboard UI and does not currently include a manifest.json file in the project root.
+
+## Scripts
+
+- pnpm dev: Start local dev server on port 5000 using Turbopack
+- pnpm build: Production build with Turbopack
+- pnpm start: Start production server
+
+## Project Structure
+
+- src/app: App Router layout, page, and global styling
+- src/components: Dashboard features and UI components
+- src/components/ui: Reusable UI primitives/components
+- src/services: API clients, config, and hooks
+- src/store: Redux store, provider, and slices
+- public: Static assets
+
+## Screenshots / Demo
+
+Add visuals to make onboarding easier for contributors and reviewers:
+
+- Place images in public/screenshots/.
+- Recommended assets:
+  - public/screenshots/home-light.png
+  - public/screenshots/home-dark.png
+  - public/screenshots/settings-modal.png
+  - public/screenshots/demo.gif
+
+Markdown snippet:
+
+```md
+![Home Light](public/screenshots/home-light.png)
+![Home Dark](public/screenshots/home-dark.png)
+![Settings](public/screenshots/settings-modal.png)
+
+![Dashboard Demo](public/screenshots/demo.gif)
+```
+
+## Core Feature Flow
+
+1. User preferences are read from Redux state.
+2. Weather data is fetched by geolocation or searched city.
+3. Quote and background data are fetched via service layer APIs.
+4. UI reacts to settings changes (theme, background source, temperature unit).
+
+## Configuration
+
+API and fallback behavior are centralized in:
+
+- src/services/config.ts
+- src/services/api.ts
+
+You can tune:
+
+- API endpoints
+- Timeout and rate-limit constants
+- Default fallback values
+
+## Troubleshooting
+
+- Module not found errors:
+  Run pnpm install and ensure import paths do not include pinned versions in source code.
+- API key warnings in console:
+  Verify .env.local values and restart dev server.
+- Weather not loading:
+  Confirm OpenWeather key is valid and location permissions are granted if using current location.
+- Extension not visible in chrome://extensions:
+  Ensure your extension wrapper contains a valid manifest.json and correct paths to the built UI.
+
+## License
+
+This project is intended for internal/demo use unless a separate license is added.

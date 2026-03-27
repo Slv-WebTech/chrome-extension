@@ -9,6 +9,20 @@ import apiService, {
     QuoteData,
     type GeolocationCoords
 } from './api';
+import { getSessionValue, setSessionValue, removeSessionValuesByPrefix } from './chrome-storage';
+
+const WEATHER_CACHE_TTL_MS = 5 * 60 * 1000;
+const WEATHER_CACHE_PREFIX = 'weather_cache_';
+const WEATHER_CACHE_LOCATION_KEY = `${WEATHER_CACHE_PREFIX}location`;
+
+export async function clearWeatherSessionCache(): Promise<void> {
+    await removeSessionValuesByPrefix(WEATHER_CACHE_PREFIX);
+}
+
+interface WeatherCacheEntry {
+    data: WeatherData;
+    savedAt: number;
+}
 
 /**
  * Hook for fetching weather data
@@ -17,14 +31,26 @@ export function useWeather(useLocation: boolean = false, city?: string) {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const cityKey = city?.trim().toLowerCase() || '';
 
     const fetchWeather = useCallback(async () => {
         if (!useLocation && !city) return;
+
+        const cacheKey = useLocation
+            ? WEATHER_CACHE_LOCATION_KEY
+            : `${WEATHER_CACHE_PREFIX}city_${cityKey}`;
 
         setLoading(true);
         setError(null);
 
         try {
+            const cached = await getSessionValue<WeatherCacheEntry | null>(cacheKey, null);
+            if (cached && Date.now() - cached.savedAt < WEATHER_CACHE_TTL_MS) {
+                setWeather(cached.data);
+                setLoading(false);
+                return;
+            }
+
             let weatherData: WeatherData;
 
             if (useLocation) {
@@ -36,13 +62,17 @@ export function useWeather(useLocation: boolean = false, city?: string) {
             }
 
             setWeather(weatherData);
+            await setSessionValue(cacheKey, {
+                data: weatherData,
+                savedAt: Date.now(),
+            });
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to fetch weather');
             setWeather(null);
         } finally {
             setLoading(false);
         }
-    }, [useLocation, city]);
+    }, [useLocation, city, cityKey]);
 
     useEffect(() => {
         fetchWeather();

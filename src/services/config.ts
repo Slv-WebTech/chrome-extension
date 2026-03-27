@@ -6,10 +6,10 @@
  */
 
 export const API_CONFIG = {
-    // Weather API - Get your free key from https://www.weatherapi.com/
+    // Weather API (OpenWeather default)
     WEATHER: {
-        KEY: process.env.NEXT_PUBLIC_WEATHER_API_KEY || 'demo-key',
-        BASE_URL: 'https://api.weatherapi.com/v1',
+        KEY: process.env.NEXT_PUBLIC_WEATHER_API_KEY || process.env.WEATHER_KEY || 'demo-key',
+        BASE_URL: process.env.NEXT_PUBLIC_WEATHER_BASE_URL || process.env.WEATHER_BASE_URL || 'https://api.openweathermap.org/data/2.5',
     },
 
     // Unsplash API - Get your free key from https://unsplash.com/developers

@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import settingsReducer from './slices/settingsSlice';
+import { chromeSyncReduxStorage } from '../services/chrome-storage';
 
 const persistConfig = {
     key: 'root',
-    storage,
+    storage: chromeSyncReduxStorage,
     whitelist: ['settings'], // Only persist settings
 };
 

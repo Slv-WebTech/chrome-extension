@@ -1,29 +1,31 @@
 'use client';
 
 import { useEffect } from 'react';
-import { QuoteSection } from '../../components/quote-section';
-import { WeatherWidget } from '../../components/weather-widget';
-import { TodoList } from '../../components/todo-list';
-import { SettingsModal } from '../../components/settings-modal';
-import { DateTimeFooter } from '../../components/date-time-footer';
+import { motion } from 'framer-motion';
+import { QuoteSection } from '../components/quote-section';
+import { WeatherWidget } from '../components/weather-widget';
+import { TodoList } from '../components/todo-list';
+import { SettingsModal } from '../components/settings-modal';
+import { DateTimeFooter } from '../components/date-time-footer';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
+import { clearWeatherSessionCache } from '../services/hooks';
 import {
     setDarkMode,
     setTemperatureUnit,
     setBackgroundImageUrl,
     setBackgroundSource,
-    setUseLocation
+    setUseLocation,
+    setWeatherCity
 } from '../store/slices/settingsSlice';
 
 export default function HomePage() {
     const dispatch = useAppDispatch();
-    const { isDarkMode, temperatureUnit, backgroundImageUrl, backgroundSource, useLocation } = useAppSelector(
+    const { isDarkMode, temperatureUnit, backgroundImageUrl, backgroundSource, useLocation, weatherCity } = useAppSelector(
         (state) => state.settings
     );
 
     // Apply dark/light theme to body and html
     useEffect(() => {
-        console.log('Dark mode changed:', isDarkMode); // Debug log
         if (isDarkMode) {
             document.documentElement.classList.add('dark');
             document.body.classList.add('dark');
@@ -35,11 +37,6 @@ export default function HomePage() {
 
     return (
         <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
-            {/* Debug indicator for dark mode */}
-            <div className="fixed top-4 left-4 z-50 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                Mode: {isDarkMode ? 'Dark' : 'Light'}
-            </div>
-
             {/* Background Image with Overlay */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -51,7 +48,7 @@ export default function HomePage() {
                             : `url('https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`
                 }}
             >
-                <div className={`absolute inset-0 ${isDarkMode ? 'bg-black/70' : 'bg-black/50'} transition-colors duration-300`}></div>
+                <div className={`absolute inset-0 ${isDarkMode ? 'bg-black/60' : 'bg-black/40'} transition-colors duration-300`}></div>
             </div>
 
             {/* Quote Banner at Top */}
@@ -62,34 +59,59 @@ export default function HomePage() {
                 isDarkMode={isDarkMode}
                 onThemeToggle={(dark: boolean) => dispatch(setDarkMode(dark))}
                 temperatureUnit={temperatureUnit}
-                onTemperatureUnitChange={(unit: 'celsius' | 'fahrenheit') => dispatch(setTemperatureUnit(unit))}
+                onTemperatureUnitChange={(unit: 'celsius' | 'fahrenheit') => {
+                    void clearWeatherSessionCache();
+                    dispatch(setTemperatureUnit(unit));
+                }}
                 backgroundImageUrl={backgroundImageUrl}
                 onBackgroundImageChange={(url: string) => dispatch(setBackgroundImageUrl(url))}
                 backgroundSource={backgroundSource}
                 onBackgroundSourceChange={(source: 'unsplash' | 'pexels' | 'custom') => dispatch(setBackgroundSource(source))}
                 useLocation={useLocation}
-                onLocationToggle={(useLocation: boolean) => dispatch(setUseLocation(useLocation))}
+                onLocationToggle={(val: boolean) => {
+                    void clearWeatherSessionCache();
+                    dispatch(setUseLocation(val));
+                    if (val) dispatch(setWeatherCity(''));
+                }}
+                weatherCity={weatherCity}
+                onWeatherCitySearch={(city: string) => {
+                    void clearWeatherSessionCache();
+                    dispatch(setWeatherCity(city));
+                    dispatch(setUseLocation(false));
+                }}
+                onUseCurrentLocation={() => {
+                    void clearWeatherSessionCache();
+                    dispatch(setWeatherCity(''));
+                    dispatch(setUseLocation(true));
+                }}
             />
 
-            {/* Main Content Grid - Adjusted for Top Quote Banner */}
-            <div className="relative z-10 min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 pt-24 pb-24">
-                {/* Left Section - Todo List */}
-                <div className="flex items-start justify-center">
-                    <div className="w-full max-w-md">
-                        <TodoList />
-                    </div>
-                </div>
-
-                {/* Right Section - Weather */}
-                <div className="flex items-start justify-center">
-                    <div className="w-full max-w-md">
+            {/* Main Content - Clean and Spacious Layout */}
+            <motion.div
+                className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-24 sm:px-6 lg:px-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+            >
+                {/* Content Container */}
+                <div className="w-full max-w-7xl mx-auto">
+                    {/* Top Section - Weather Widget Centered */}
+                    <div className="flex justify-center mb-8">
                         <WeatherWidget
                             temperatureUnit={temperatureUnit}
                             useLocation={useLocation}
+                            searchedCity={weatherCity}
                         />
                     </div>
+
+                    {/* Bottom Section - Todo List Centered */}
+                    <div className="flex justify-center">
+                        <div className="w-full max-w-xl">
+                            <TodoList />
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Date/Time Footer */}
             <DateTimeFooter />

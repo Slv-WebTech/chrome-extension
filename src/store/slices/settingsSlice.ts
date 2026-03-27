@@ -6,6 +6,7 @@ export interface SettingsState {
     backgroundImageUrl: string;
     backgroundSource: 'unsplash' | 'pexels' | 'custom';
     useLocation: boolean;
+    weatherCity: string;
 }
 
 const initialState: SettingsState = {
@@ -13,7 +14,8 @@ const initialState: SettingsState = {
     temperatureUnit: 'celsius',
     backgroundImageUrl: '',
     backgroundSource: 'unsplash',
-    useLocation: false,
+    useLocation: true,
+    weatherCity: '',
 };
 
 const settingsSlice = createSlice({
@@ -38,6 +40,9 @@ const settingsSlice = createSlice({
         setUseLocation: (state, action: PayloadAction<boolean>) => {
             state.useLocation = action.payload;
         },
+        setWeatherCity: (state, action: PayloadAction<string>) => {
+            state.weatherCity = action.payload;
+        },
     },
 });
 
@@ -47,7 +52,8 @@ export const {
     setTemperatureUnit,
     setBackgroundImageUrl,
     setBackgroundSource,
-    setUseLocation
+    setUseLocation,
+    setWeatherCity
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

@@ -1,5 +1,11 @@
 # API Service Documentation
 
+## Project Summary
+
+This project is a Chrome extension productivity dashboard built with Next.js that includes weather, quotes, todos, and dynamic background preferences powered by a centralized service layer and Redux state.
+
+For full app overview, setup, and deployment instructions, see the root README.
+
 This directory contains a centralized API service for handling all external API calls in the Chrome Extension Dashboard.
 
 ## Files Overview
@@ -7,13 +13,13 @@ This directory contains a centralized API service for handling all external API 
 - **`api.ts`** - Main API service with all API integration methods
 - **`config.ts`** - Configuration and API keys management
 - **`hooks.ts`** - React hooks for easy component integration
-- **`.env.example`** - Example environment file for API keys
+- **`.env.local`** - Local environment file for API keys (create this file in project root)
 
 ## Quick Start
 
 ### 1. Set up API Keys
 
-1. Copy `.env.example` to `.env.local`
+1. Create a `.env.local` file in the project root
 2. Fill in your API keys:
 
 ```bash
