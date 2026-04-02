@@ -54,13 +54,27 @@ export function QuoteSection() {
   const currentQuote = displayQuote();
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40    border-white/10">
-      <div className="flex items-center justify-center px-4 py-3 max-w-6xl mx-auto">
-        {/* Quote content - centered */}
-        <div className="text-center">
-          <div className="text-white text-sm md:text-base font-medium">
+    <div className="fixed left-0 right-0 top-0 z-40">
+      <div className="mx-auto flex w-full items-center justify-start py-3 pl-4 pr-[260px] md:pl-6 md:pr-[300px]">
+        <div className="relative w-full max-w-[980px] rounded-2xl bg-gradient-to-b from-white/11 via-white/7 to-white/4 px-4 py-3 text-center shadow-[0_8px_24px_rgba(0,0,0,0.18),0_0_0_1px_rgba(255,255,255,0.04)] backdrop-blur-md md:px-6">
+          <div className="pointer-events-none absolute inset-[1px] rounded-[15px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_18px_rgba(255,255,255,0.05)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_14%_18%,rgba(255,255,255,0.12),transparent_38%),radial-gradient(circle_at_86%_88%,rgba(148,163,184,0.08),transparent_42%)]" />
+          <div
+            className="relative z-10 text-sm font-medium text-white md:text-base"
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
             "{currentQuote.content}"
           </div>
+          {currentQuote.author && (
+            <div className="relative z-10 mt-2 text-xs font-medium text-white/75 md:text-sm">
+              — {currentQuote.author}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -133,9 +133,10 @@ export function TodoList() {
                   exit={{ opacity: 0, x: 20, height: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                   layout
-                  className="flex min-h-11 items-center gap-3 p-1 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-200 group"
+                  className="flex min-h-11 items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-1 transition-all duration-200 group hover:border-white/20 hover:bg-white/10"
                 >
                   <motion.div
+                    className="flex h-5 w-5 flex-shrink-0 items-center justify-center"
                     whileTap={{ scale: 0.9 }}
                   >
                     <Checkbox
@@ -146,7 +147,7 @@ export function TodoList() {
                     />
                   </motion.div>
                   <span
-                    className={`flex-1 text-sm transition-all duration-200 ${todo.completed
+                    className={`flex-1 self-center text-sm leading-5 transition-all duration-200 ${todo.completed
                       ? 'text-gray-400 line-through opacity-60'
                       : 'text-white'} truncate
                       }`}

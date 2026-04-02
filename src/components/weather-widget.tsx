@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from './ui/card';
 import { useWeather } from '../services/hooks';
 
 // Weather icon components
@@ -74,89 +73,123 @@ export function WeatherWidget({ temperatureUnit = 'celsius', useLocation = false
   const temperature = weather ? convertTemp(Math.round(weather.main.temp)) : null;
   const feelsLike = weather ? convertTemp(Math.round(weather.main.feels_like)) : null;
   const weatherCondition = weather?.weather?.[0]?.description || 'Weather unavailable';
-  const cityLabel = shouldUseLocation ? (weather?.name || 'Your Location') : (weather?.name || cityQuery);
   const statCards = weather ? [
-    { label: 'Feels Like', value: `${feelsLike}°${isCelsius ? 'C' : 'F'}` },
-    { label: 'Humidity', value: `${weather.main.humidity}%` },
-    { label: 'Wind', value: `${weather.wind.speed} m/s` },
-    { label: 'Clouds', value: `${weather.clouds.all}%` },
-    { label: 'Pressure', value: `${weather.main.pressure} hPa` },
-    { label: 'Country', value: weather.sys.country },
+    { label: 'Feels', value: feelsLike !== null ? `${feelsLike}°${isCelsius ? 'C' : 'F'}` : '--' },
+    { label: 'Humidity', value: Number.isFinite(weather.main?.humidity) ? `${weather.main.humidity}%` : '--' },
+    { label: 'Wind', value: Number.isFinite(weather.wind?.speed) ? `${weather.wind.speed} m/s` : '--' },
+    { label: 'Clouds', value: Number.isFinite(weather.clouds?.all) ? `${weather.clouds.all}%` : '--' },
+    { label: 'Pressure', value: Number.isFinite(weather.main?.pressure) ? `${weather.main.pressure} hPa` : '--' },
+    { label: 'Country', value: weather.sys?.country || '--' },
   ] : [];
+  const statRingText = [
+    `Feels Like ${loading ? '--' : (statCards[0]?.value || '--')}`,
+    `Humidity ${loading ? '--' : (statCards[1]?.value || '--')}`,
+    `Wind Speed ${loading ? '--' : (statCards[2]?.value || '--').replace(' m/s', ' m/s')}`,
+    `Cloud Cover ${loading ? '--' : (statCards[3]?.value || '--')}`,
+    `Pressure ${loading ? '--' : (statCards[4]?.value || '--').replace(' hPa', ' hPa')}`,
+    `Country ${loading ? '--' : (statCards[5]?.value || '--')}`,
+  ];
+  const widgetSize = 240;
+  const center = widgetSize / 2;
+  const mainCardSize = 118;
+  const statRingRadius = 100;
+  const statOrbitDuration = 40;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2, type: 'spring', stiffness: 120 }}
+      className="fixed right-4 top-4 z-30"
     >
-      <div className="w-full max-w-3xl space-y-4">
-        <Card className="bg-gradient-to-br from-blue-500/25 to-cyan-500/15 backdrop-blur-md border-white/30 rounded-2xl shadow-2xl transition-all duration-300">
-          <CardContent className="p-6">
-            <div className="text-center space-y-3">
+      {/* Circular orbit container: all elements derive from the same center point */}
+      <div className="relative" style={{ width: widgetSize, height: widgetSize }}>
+
+        {/* Orbiting readable stat text */}
+        <div className="pointer-events-none absolute inset-0 z-10">
+          {statRingText.map((item, index) => {
+            const baseAngle = (index * 360) / statRingText.length;
+
+            return (
               <motion.div
-                className="flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.03 }}
+                key={item}
+                className="absolute inset-0"
+                style={{ transformOrigin: `${center}px ${center}px` }}
+                animate={{ rotate: [baseAngle, baseAngle + 360] }}
+                transition={{ duration: statOrbitDuration, repeat: Infinity, ease: 'linear' }}
               >
-                <motion.div
-                  animate={{
-                    rotate: [0, 360],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
+                <div
+                  className="absolute left-1/2 top-1/2"
+                  style={{ transform: `translate(-50%, -50%) translateY(-${statRingRadius}px)` }}
                 >
-                  <WeatherIcon className="w-8 h-8 text-yellow-300 drop-shadow-lg" />
-                </motion.div>
-                <h3 className="text-white text-xl font-semibold drop-shadow-md">{cityLabel}</h3>
+                  <motion.p
+                    animate={{ rotate: [0, -360] }}
+                    transition={{ duration: statOrbitDuration, repeat: Infinity, ease: 'linear' }}
+                    className="whitespace-nowrap rounded-full bg-black/12 px-2 py-[1px] text-center text-[8.1px] font-semibold leading-tight text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]"
+                  >
+                    {item}
+                  </motion.p>
+                </div>
               </motion.div>
+            );
+          })}
+        </div>
 
-              <motion.div
-                className="text-5xl text-white font-bold drop-shadow-lg"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.3 }}
-              >
-                {loading ? '...' : temperature !== null ? `${temperature}°${isCelsius ? 'C' : 'F'}` : '--'}
-              </motion.div>
+        {/* Main circular weather card */}
+        <motion.div
+          className="absolute z-20 overflow-hidden rounded-full border border-white/24 bg-gradient-to-b from-white/12 via-sky-400/10 to-blue-900/45 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_6px_28px_rgba(6,182,212,0.45),0_18px_48px_rgba(2,80,155,0.42)] backdrop-blur-xl"
+          style={{
+            width: mainCardSize,
+            height: mainCardSize,
+            left: center - mainCardSize / 2,
+            top: center - mainCardSize / 2,
+          }}
+          whileHover={{ scale: 1.04 }}
+          transition={{ type: 'spring', stiffness: 300 }}
+        >
+          <div className="pointer-events-none absolute inset-[2px] rounded-full border border-white/30" />
+          <div className="pointer-events-none absolute inset-[6px] rounded-full border border-white/10" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.40),transparent_38%),radial-gradient(circle_at_68%_80%,rgba(14,165,233,0.28),transparent_46%),radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.06),transparent_70%)]" />
+          {/* Glow blobs */}
+          <div className="pointer-events-none absolute inset-0 rounded-full">
+            <div className="absolute -right-4 -top-3 h-16 w-16 rounded-full bg-cyan-300/55 blur-2xl" />
+            <div className="absolute -bottom-4 -left-3 h-16 w-16 rounded-full bg-blue-600/40 blur-2xl" />
+            <div className="absolute left-[20px] top-[10px] h-3 w-10 rounded-full bg-white/52 blur-[1.5px]" />
+          </div>
 
-              <motion.p
-                className="text-white/90 text-base font-medium capitalize"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                {loading ? 'Fetching weather...' : weatherCondition}
-              </motion.p>
+          <div className="relative flex h-full flex-col items-center justify-start gap-[3px] px-2 pt-[10px] text-center">
+            <motion.div
+              className="grid h-[26px] w-[26px] place-items-center rounded-full border border-white/40 bg-gradient-to-b from-white/30 to-white/10 shadow-[inset_0_1px_3px_rgba(255,255,255,0.55),0_2px_8px_rgba(0,0,0,0.28)]"
+              animate={{ y: [0, -1.5, 0], scale: [1, 1.04, 1] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <WeatherIcon className="h-[14px] w-[14px] text-yellow-200 drop-shadow-[0_0_5px_rgba(250,204,21,0.9)]" />
+            </motion.div>
 
-              {error && !loading && (
-                <p className="text-xs text-red-300">
-                  {error.toLowerCase().includes('404') || error.toLowerCase().includes('city not found')
-                    ? `"${cityQuery}" not found — try a different city.`
-                    : 'Weather unavailable'}
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            <motion.div
+              className="truncate text-[32px] font-black leading-none tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, delay: 0.3 }}
+            >
+              {loading ? '…' : temperature !== null ? `${temperature}°${isCelsius ? 'C' : 'F'}` : '--'}
+            </motion.div>
 
-        {!loading && weather && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {statCards.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + index * 0.04, duration: 0.25 }}
-                className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-center backdrop-blur-md"
-              >
-                <p className="text-[11px] uppercase tracking-wide text-white/70">{stat.label}</p>
-                <p className="mt-1 text-sm font-semibold text-white">{stat.value}</p>
-              </motion.div>
-            ))}
+            <p className="max-w-[90px] truncate rounded-full border border-white/20 bg-white/10 px-2 py-[2px] text-[7.8px] font-semibold capitalize tracking-wide text-white/88 backdrop-blur-sm">
+              {loading ? 'Loading…' : weatherCondition}
+            </p>
+          </div>
+
+        </motion.div>
+
+        {/* Error state */}
+        {error && !loading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="max-w-[160px] px-3 text-center text-[10px] text-red-300">
+              {error.toLowerCase().includes('404') || error.toLowerCase().includes('city not found')
+                ? `"${cityQuery}" not found`
+                : 'Weather unavailable'}
+            </p>
           </div>
         )}
       </div>

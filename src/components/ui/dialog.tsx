@@ -70,9 +70,10 @@ export function DialogContent({ className = '', children, ...props }: DialogCont
       >
         <button
           onClick={() => setOpen(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/85 backdrop-blur-md transition-all duration-200 hover:scale-[1.03] hover:bg-white/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-400/70"
+          aria-label="Close dialog"
         >
-          <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+          <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
           </svg>
         </button>
