@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { QuoteSection } from '../components/quote-section';
 import { WeatherWidget } from '../components/weather-widget';
 import { TodoList } from '../components/todo-list';
-import { MusicPlayer } from '../components/music-player';
 import { SettingsModal } from '../components/settings-modal';
 import { DateTimeFooter } from '../components/date-time-footer';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
@@ -103,11 +102,6 @@ export default function HomePage() {
                             useLocation={useLocation}
                             searchedCity={weatherCity}
                         />
-                    </div>
-
-                    {/* Left-center Section - Music Player */}
-                    <div className="fixed left-4 top-1/2 z-30 -translate-y-1/2 sm:left-6 lg:left-8">
-                        <MusicPlayer />
                     </div>
 
                     {/* Bottom-right Section - Todo List */}
