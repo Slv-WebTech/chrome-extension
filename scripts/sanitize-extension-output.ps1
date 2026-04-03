@@ -102,4 +102,35 @@ if ($remainingUnderscore) {
   throw "Extension output still contains reserved underscore paths:`n$names"
 }
 
+# 5) Extract inline <script> blocks from index.html for Chrome MV3 CSP compliance.
+#    Chrome extension pages block inline scripts (script-src 'self' default CSP).
+#    Move each inline script body to an external .js file and replace with <script src=...>.
+$indexHtml = Join-Path $OutDir 'index.html'
+if (Test-Path $indexHtml) {
+  $html = [System.IO.File]::ReadAllText($indexHtml, [System.Text.Encoding]::UTF8)
+  $pattern = [regex]'(?s)<script(?![^>]*\bsrc=)[^>]*>(.*?)<\/script>'
+  $scriptMatches = @($pattern.Matches($html))
+
+  # Process in reverse order so replacements don't shift earlier indices.
+  $scriptMatches = $scriptMatches | Sort-Object { $_.Index } -Descending
+
+  $counter = 0
+  foreach ($sm in $scriptMatches) {
+    $inner = $sm.Groups[1].Value.Trim()
+    if ([string]::IsNullOrWhiteSpace($inner)) { continue }
+
+    $counter++
+    $num    = $scriptMatches.Count - $counter + 1  # preserve original document order in filenames
+    $jsFile = "ext-init-$num.js"
+    $jsPath = Join-Path $OutDir $jsFile
+    [System.IO.File]::WriteAllText($jsPath, $inner, [System.Text.Encoding]::UTF8)
+
+    $replacement = "<script src='./$jsFile'></script>"
+    $html = $html.Remove($sm.Index, $sm.Length).Insert($sm.Index, $replacement)
+  }
+
+  [System.IO.File]::WriteAllText($indexHtml, $html, [System.Text.Encoding]::UTF8)
+  Write-Host "Extracted $counter inline script(s) from index.html for CSP compliance." -ForegroundColor Cyan
+}
+
 Write-Host 'Sanitized extension output for Chrome compatibility.' -ForegroundColor Green

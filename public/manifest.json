@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Dashboard New Tab",
-  "description": "Productivity dashboard with weather, quotes, todos, and settings.",
+  "name": "Momentum Dashboard",
+  "description": "A beautiful new tab experience with real-time weather, daily quotes, task management, and a customizable interface.",
   "version": "1.0.0",
   "chrome_url_overrides": {
-    "newtab": "newtab.html"
+    "newtab": "index.html"
   },
   "permissions": ["storage", "geolocation"],
   "host_permissions": [
