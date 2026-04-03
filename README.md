@@ -92,6 +92,12 @@ Start production server:
 pnpm start
 ```
 
+If `pnpm start` is showing old UI changes, run a fresh production build + start:
+
+```bash
+pnpm run start:fresh
+```
+
 ## Chrome Extension Usage
 
 ### Development Mode
@@ -106,33 +112,52 @@ pnpm dev
 
 - http://localhost:5000
 
-### Build Mode
-
-1. Create production assets:
-
-```bash
-pnpm build
-```
-
-2. Start production preview server (optional):
-
-```bash
-pnpm start
-```
-
 ### Load as Extension
 
-To load this in Chrome as an unpacked extension, you need a valid extension wrapper (including manifest.json) that points to this UI build/runtime.
+This repository includes a Manifest V3 file at `public/manifest.json` and supports static export for unpacked extension testing.
 
-Current repository note:
+1. Build static extension output:
 
-- This repo focuses on the dashboard UI and does not currently include a manifest.json file in the project root.
+```bash
+pnpm run extension:build
+```
+
+2. Open `chrome://extensions`
+3. Enable Developer mode
+4. Click `Load unpacked`
+5. Select the `out` folder from this repo
+
+The extension overrides Chrome new tab using `index.html` from the exported output.
+
+### Create ZIP Package (Sharing/Testing)
+
+```bash
+pnpm run extension:zip
+```
+
+Generated package:
+
+- `release/chrome-extension.zip`
+
+### GitHub Pages (SSG)
+
+A workflow is included at `.github/workflows/deploy-pages.yml`.
+
+1. In GitHub repository settings, open `Pages`
+2. Set `Build and deployment` source to `GitHub Actions`
+3. Push to `master` or `Next-new-version`
+
+The workflow builds with static export and deploys the `out` folder to GitHub Pages.
 
 ## Scripts
 
 - pnpm dev: Start local dev server on port 5000 using Turbopack
-- pnpm build: Production build with Turbopack
+- pnpm build: Production build
 - pnpm start: Start production server
+- pnpm start:fresh: Rebuild and start production server
+- pnpm build:static: Build with static-export config (used by extension/pages workflows)
+- pnpm extension:build: Build extension-ready static output into `out`
+- pnpm extension:zip: Build static output and create `release/chrome-extension.zip`
 
 ## Project Structure
 

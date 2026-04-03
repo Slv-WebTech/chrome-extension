@@ -4,7 +4,7 @@
 
 This project is a Chrome extension productivity dashboard built with Next.js that includes weather, quotes, todos, and dynamic background preferences powered by a centralized service layer and Redux state.
 
-For full app overview, setup, and deployment instructions, see the root README.
+For full app overview, setup, extension packaging, and GitHub Pages deployment instructions, see the root README.
 
 This directory contains a centralized API service for handling all external API calls in the Chrome Extension Dashboard.
 
@@ -178,6 +178,17 @@ All API calls include comprehensive error handling:
 - Development: API keys can be demo keys, warnings will be shown
 - Production: All API keys must be properly configured
 - The config automatically detects environment and provides appropriate feedback
+
+## Build and Deployment Notes
+
+Service-layer behavior is the same across modes, but app delivery differs:
+
+- `pnpm dev`: local development
+- `pnpm run start:fresh`: rebuild + run production server
+- `pnpm run extension:build`: static export for Chrome unpacked extension (`out` folder)
+- `pnpm run extension:zip`: static export + zip package (`release/chrome-extension.zip`)
+
+For full extension load steps and GitHub Pages workflow details, see the root README.
 
 ## Extending the API Service
 
