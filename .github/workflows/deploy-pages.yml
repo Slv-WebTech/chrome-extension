@@ -42,6 +42,10 @@ jobs:
         run: pnpm build:static
         env:
           BUILD_TARGET: static
+          NEXT_PUBLIC_WEATHER_API_KEY: ${{ secrets.NEXT_PUBLIC_WEATHER_API_KEY }}
+          NEXT_PUBLIC_WEATHER_BASE_URL: ${{ secrets.NEXT_PUBLIC_WEATHER_BASE_URL }}
+          NEXT_PUBLIC_UNSPLASH_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY }}
+          NEXT_PUBLIC_PEXELS_API_KEY: ${{ secrets.NEXT_PUBLIC_PEXELS_API_KEY }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

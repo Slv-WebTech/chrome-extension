@@ -96,6 +96,12 @@ export interface GeolocationCoords {
 // API Configuration imported from config file
 const { WEATHER, UNSPLASH, PEXELS, QUOTES, IP_LOCATION, TIMEOUTS, DEFAULTS } = API_CONFIG;
 
+function assertWeatherApiKeyConfigured() {
+    if (!WEATHER.KEY || WEATHER.KEY === 'demo-key') {
+        throw new Error('Weather API key is not configured. Set NEXT_PUBLIC_WEATHER_API_KEY for production builds.');
+    }
+}
+
 /**
  * Generic fetch wrapper with error handling
  */
@@ -138,6 +144,7 @@ export const weatherAPI = {
      * Get weather by coordinates
      */
     async getWeatherByCoords(lat: number, lon: number): Promise<WeatherData> {
+        assertWeatherApiKeyConfigured();
         const url = `${WEATHER.BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch<WeatherData>(url);
     },
@@ -146,6 +153,7 @@ export const weatherAPI = {
      * Get weather by city name
      */
     async getWeatherByCity(city: string): Promise<WeatherData> {
+        assertWeatherApiKeyConfigured();
         const url = `${WEATHER.BASE_URL}/weather?q=${encodeURIComponent(city)}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch<WeatherData>(url);
     },
@@ -154,6 +162,7 @@ export const weatherAPI = {
      * Get weather forecast (optional extension)
      */
     async getForecast(location: string, days: number = 3): Promise<any> {
+        assertWeatherApiKeyConfigured();
         const url = `${WEATHER.BASE_URL}/forecast?q=${encodeURIComponent(location)}&appid=${WEATHER.KEY}&units=metric`;
         return apiFetch(url);
     },
