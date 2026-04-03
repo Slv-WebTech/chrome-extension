@@ -5,9 +5,8 @@ $zipPath = Join-Path $zipDir 'chrome-extension.zip'
 
 Write-Host 'Preparing extension package...' -ForegroundColor Cyan
 
-# Ensure fresh static output exists
-$env:BUILD_TARGET = 'static'
-pnpm run build:static
+# Ensure fresh and sanitized static output exists
+powershell -ExecutionPolicy Bypass -File ./scripts/build-extension.ps1
 
 if (-not (Test-Path './out/index.html')) {
   throw 'Cannot package extension: out/index.html not found.'
