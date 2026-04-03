@@ -1,31 +1,38 @@
 import * as React from "react";
+import { useId } from "react";
 
-interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface CheckboxProps {
+  checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  className?: string;
+  style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
-export function Checkbox({ className = '', onCheckedChange, onChange, style, ...props }: CheckboxProps & { style?: React.CSSProperties }) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onCheckedChange?.(e.target.checked);
-    onChange?.(e);
-  };
+export function Checkbox({ className = '', checked, onCheckedChange, style, disabled }: CheckboxProps) {
+  const id = useId();
 
   return (
-    <div className="relative">
+    <>
       <input
+        id={id}
         type="checkbox"
-        className={`peer h-4 w-4 shrink-0 rounded-sm border shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 appearance-none ${className}`}
-        style={style}
-        onChange={handleChange}
-        {...props}
+        checked={checked}
+        disabled={disabled}
+        onChange={(e) => onCheckedChange?.(e.target.checked)}
+        style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }}
       />
-      <svg
-        className="absolute inset-0 h-4 w-4 text-white opacity-0 peer-checked:opacity-100 pointer-events-none"
-        fill="currentColor"
-        viewBox="0 0 20 20"
+      <label
+        htmlFor={id}
+        className={`h-5 w-5 flex-shrink-0 rounded border flex items-center justify-center cursor-pointer transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+        style={style}
       >
-        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-      </svg>
-    </div>
+        {checked && (
+          <svg viewBox="0 0 24 24" style={{ width: 13, height: 13, fill: 'white', display: 'block' }}>
+            <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" />
+          </svg>
+        )}
+      </label>
+    </>
   );
 }
