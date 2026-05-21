@@ -1,42 +1,119 @@
 # Chrome Extension Dashboard UI
 
-## Project Summary
+<p align="center">
+  <strong>Premium Chrome New Tab Experience</strong>
+  <br />
+  Weather intelligence, task planning, daily inspiration, and visual personalization in one modern dashboard.
+</p>
 
-A Chrome extension productivity dashboard (new-tab style UI) built with Next.js that combines weather, quotes, todos, and dynamic backgrounds with user preferences managed through Redux and external API integrations.
+<p align="center">
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black" />
+  <img alt="React" src="https://img.shields.io/badge/React-19-149eca" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178c6" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-4-06b6d4" />
+  <img alt="Redux Toolkit" src="https://img.shields.io/badge/Redux%20Toolkit-2.x-764abc" />
+  <img alt="Manifest V3" src="https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4" />
+</p>
 
-A customizable Chrome extension dashboard UI built with Next.js, TypeScript, Redux Toolkit, and Tailwind CSS.
+<p align="center">
+  <a href="#quick-start">Quick Start</a> |
+  <a href="#chrome-extension-workflow">Load as Extension</a> |
+  <a href="#commands">Commands</a> |
+  <a href="#marketing-copy">Marketing Copy</a>
+</p>
 
-The app includes:
+## Overview
 
-- Weather widget with city search or current location
-- Inspirational quote section
-- Todo list
-- Dynamic background image source selection (Unsplash, Pexels, or custom URL)
-- Theme and preference settings persisted in app state
+This project replaces the default Chrome new tab with a polished productivity dashboard. It is designed to deliver immediate day-start clarity by combining weather, todos, quotes, and background customization into a single focused workspace.
+
+## At a Glance
+
+| Category        | What You Get                                            |
+| --------------- | ------------------------------------------------------- |
+| Productivity    | Todo tracking with persistent state                     |
+| Context         | Real-time weather by city or current location           |
+| Motivation      | Inspirational quote section                             |
+| Personalization | Dynamic backgrounds via Unsplash, Pexels, or custom URL |
+| Platform        | Manifest V3-ready Chrome extension workflow             |
+
+## Table of Contents
+
+- [Why It Feels Premium](#why-it-feels-premium)
+- [Feature Highlights](#feature-highlights)
+- [Architecture Flow](#architecture-flow)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Environment Variables](#environment-variables)
+- [Commands](#commands)
+- [Chrome Extension Workflow](#chrome-extension-workflow)
+- [Project Structure](#project-structure)
+- [Deployment Notes](#deployment-notes)
+- [Troubleshooting](#troubleshooting)
+- [Marketing Copy](#marketing-copy)
+- [License](#license)
+
+## Why It Feels Premium
+
+- Strong visual hierarchy with clean component-based layout
+- Smart defaults that keep users productive with minimal setup
+- Personalization controls that do not compromise performance or simplicity
+
+## Feature Highlights
+
+### Productivity Core
+
+- Todo list with persistent state management
+- Fast interactions and lightweight daily planning flow
+
+### Live Context
+
+- Weather widget with city search and geolocation support
+- Daily quote section to keep the experience fresh and engaging
+
+### Personalization Layer
+
+- Background provider switching (Unsplash, Pexels, custom image URL)
+- Settings modal for theme and behavior controls
+
+## Architecture Flow
+
+```mermaid
+flowchart LR
+  U[User Opens New Tab] --> UI[Dashboard UI]
+  UI --> ST[Redux Store]
+  UI --> API[Service Layer]
+  API --> W[Weather API]
+  API --> BG[Image Providers]
+  API --> Q[Quote Source]
+  ST --> P[Persisted Preferences]
+  P --> UI
+```
 
 ## Tech Stack
 
-- Next.js 16 (App Router + Turbopack)
+- Next.js 16 (App Router)
 - React 19
 - TypeScript
 - Redux Toolkit + React Redux + redux-persist
-- Tailwind CSS
-- Radix UI primitives and related UI libraries
+- Tailwind CSS 4
+- Radix UI primitives
 
-## Prerequisites
+## Quick Start
+
+### Prerequisites
 
 - Node.js 20+
 - pnpm 10+
 
-## Setup
-
-1. Install dependencies:
+### 1. Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-2. Create a .env.local file in the project root and add your API keys:
+### 2. Configure Environment
+
+Create `.env.local` in the project root:
 
 ```bash
 NEXT_PUBLIC_WEATHER_API_KEY=your_openweather_key
@@ -46,77 +123,44 @@ NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
 NEXT_PUBLIC_PEXELS_API_KEY=your_pexels_api_key
 ```
 
-Notes:
-
-- If keys are missing, parts of the app may fall back to demo behavior or show warnings.
-- Quotes and IP-based location APIs are configured without keys in current defaults.
-
-## API Key Matrix
-
-| Variable                        | Purpose                               | Required                            | Default/Fallback                        |
-| ------------------------------- | ------------------------------------- | ----------------------------------- | --------------------------------------- |
-| NEXT_PUBLIC_WEATHER_API_KEY     | OpenWeather current weather API       | Yes (for weather feature)           | demo-key (weather may fail)             |
-| NEXT_PUBLIC_WEATHER_BASE_URL    | Weather API base URL                  | No                                  | https://api.openweathermap.org/data/2.5 |
-| NEXT_PUBLIC_UNSPLASH_ACCESS_KEY | Unsplash random/search photos         | Optional (if using Unsplash source) | demo-key (may fail)                     |
-| NEXT_PUBLIC_PEXELS_API_KEY      | Pexels image search/curated photos    | Optional (if using Pexels source)   | demo-key (may fail)                     |
-| WEATHER_KEY                     | Server-side fallback weather key      | Optional                            | demo-key                                |
-| WEATHER_BASE_URL                | Server-side fallback weather base URL | Optional                            | OpenWeather default                     |
-
-Recommendation:
-
-- For a fully working dashboard, set at least NEXT_PUBLIC_WEATHER_API_KEY and one image provider key.
-
-## Run Locally
-
-Start development server:
+### 3. Run Development Server
 
 ```bash
 pnpm dev
 ```
 
-Default local URL:
+App URL: `http://localhost:5000`
 
-- http://localhost:5000
+## Environment Variables
 
-## Build and Start
+| Variable                          | Purpose                          | Required              |
+| --------------------------------- | -------------------------------- | --------------------- |
+| `NEXT_PUBLIC_WEATHER_API_KEY`     | OpenWeather API key              | Yes (weather feature) |
+| `NEXT_PUBLIC_WEATHER_BASE_URL`    | Weather API base URL             | No                    |
+| `NEXT_PUBLIC_UNSPLASH_ACCESS_KEY` | Unsplash API key                 | Optional              |
+| `NEXT_PUBLIC_PEXELS_API_KEY`      | Pexels API key                   | Optional              |
+| `WEATHER_KEY`                     | Server-side weather fallback key | Optional              |
+| `WEATHER_BASE_URL`                | Server-side weather fallback URL | Optional              |
 
-Create production build:
+Recommendation: configure weather plus at least one background provider key.
 
-```bash
-pnpm build
-```
+## Commands
 
-Start production server:
+| Command                | Description                           |
+| ---------------------- | ------------------------------------- |
+| `pnpm dev`             | Start local dev server on port 5000   |
+| `pnpm build`           | Create production build               |
+| `pnpm start`           | Run production server                 |
+| `pnpm start:fresh`     | Rebuild and run production server     |
+| `pnpm build:static`    | Build static-ready app                |
+| `pnpm extension:build` | Build extension-ready output in `out` |
+| `pnpm extension:zip`   | Create `release/chrome-extension.zip` |
 
-```bash
-pnpm start
-```
+## Chrome Extension Workflow
 
-If `pnpm start` is showing old UI changes, run a fresh production build + start:
+### Load Unpacked Extension
 
-```bash
-pnpm run start:fresh
-```
-
-## Chrome Extension Usage
-
-### Development Mode
-
-1. Run the UI locally:
-
-```bash
-pnpm dev
-```
-
-2. Use this local URL while developing extension UI behavior:
-
-- http://localhost:5000
-
-### Load as Extension
-
-This repository includes a Manifest V3 file at `public/manifest.json` and supports static export for unpacked extension testing.
-
-1. Build static extension output:
+1. Build extension output:
 
 ```bash
 pnpm run extension:build
@@ -125,101 +169,75 @@ pnpm run extension:build
 2. Open `chrome://extensions`
 3. Enable Developer mode
 4. Click `Load unpacked`
-5. Select the `out` folder from this repo
+5. Select the `out` folder
 
-The extension overrides Chrome new tab using `index.html` from the exported output.
+This project uses Manifest V3 via `public/manifest.json` and overrides the new tab page.
 
-### Create ZIP Package (Sharing/Testing)
+### Create Zip Package
 
 ```bash
 pnpm run extension:zip
 ```
 
-Generated package:
-
-- `release/chrome-extension.zip`
-
-### GitHub Pages (SSG)
-
-A workflow is included at `.github/workflows/deploy-pages.yml`.
-
-1. In GitHub repository settings, open `Pages`
-2. Set `Build and deployment` source to `GitHub Actions`
-3. Push to `master` or `Next-new-version`
-
-The workflow builds with static export and deploys the `out` folder to GitHub Pages.
-
-## Scripts
-
-- pnpm dev: Start local dev server on port 5000 using Turbopack
-- pnpm build: Production build
-- pnpm start: Start production server
-- pnpm start:fresh: Rebuild and start production server
-- pnpm build:static: Build with static-export config (used by extension/pages workflows)
-- pnpm extension:build: Build extension-ready static output into `out`
-- pnpm extension:zip: Build static output and create `release/chrome-extension.zip`
+Generated artifact: `release/chrome-extension.zip`
 
 ## Project Structure
 
-- src/app: App Router layout, page, and global styling
-- src/components: Dashboard features and UI components
-- src/components/ui: Reusable UI primitives/components
-- src/services: API clients, config, and hooks
-- src/store: Redux store, provider, and slices
-- public: Static assets
-
-## Screenshots / Demo
-
-Add visuals to make onboarding easier for contributors and reviewers:
-
-- Place images in public/screenshots/.
-- Recommended assets:
-  - public/screenshots/home-light.png
-  - public/screenshots/home-dark.png
-  - public/screenshots/settings-modal.png
-  - public/screenshots/demo.gif
-
-Markdown snippet:
-
-```md
-![Home Light](public/screenshots/home-light.png)
-![Home Dark](public/screenshots/home-dark.png)
-![Settings](public/screenshots/settings-modal.png)
-
-![Dashboard Demo](public/screenshots/demo.gif)
+```text
+src/
+  app/          App Router pages, layout, globals
+  components/   Dashboard features and reusable UI
+  services/     API clients, config, and hooks
+  store/        Redux provider, store, slices
+public/         Static assets and extension manifest
+scripts/        Extension build and packaging scripts
+docs/           Reusable project description and marketing copy
 ```
 
-## Core Feature Flow
+## Deployment Notes
 
-1. User preferences are read from Redux state.
-2. Weather data is fetched by geolocation or searched city.
-3. Quote and background data are fetched via service layer APIs.
-4. UI reacts to settings changes (theme, background source, temperature unit).
+For production web build:
 
-## Configuration
+```bash
+pnpm build
+pnpm start
+```
 
-API and fallback behavior are centralized in:
+If stale output appears:
 
-- src/services/config.ts
-- src/services/api.ts
-
-You can tune:
-
-- API endpoints
-- Timeout and rate-limit constants
-- Default fallback values
+```bash
+pnpm run start:fresh
+```
 
 ## Troubleshooting
 
-- Module not found errors:
-  Run pnpm install and ensure import paths do not include pinned versions in source code.
-- API key warnings in console:
-  Verify .env.local values and restart dev server.
-- Weather not loading:
-  Confirm OpenWeather key is valid and location permissions are granted if using current location.
-- Extension not visible in chrome://extensions:
-  Ensure your extension wrapper contains a valid manifest.json and correct paths to the built UI.
+### Module Resolution Errors
+
+- Run `pnpm install`
+- Ensure imports do not include pinned package versions in source paths
+
+### Weather Data Not Loading
+
+- Verify `NEXT_PUBLIC_WEATHER_API_KEY`
+- Allow browser location access when using current-location weather
+
+### Extension Not Appearing in Chrome
+
+- Confirm `public/manifest.json` is valid
+- Rebuild with `pnpm run extension:build`
+- Reload `out` from `chrome://extensions`
+
+## Marketing Copy
+
+Need store, recruiter, and SaaS-ready descriptions?
+
+Use `docs/project-descriptions.md` for:
+
+- Chrome Web Store listing copy
+- Enterprise and SEO-focused variants
+- GitHub About and topics
+- Recruiter and portfolio descriptions
 
 ## License
 
-This project is intended for internal/demo use unless a separate license is added.
+No explicit license file is currently included. Add a license before public distribution.
