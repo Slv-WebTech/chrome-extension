@@ -1,25 +1,39 @@
 {
   "manifest_version": 3,
   "name": "Momentum Dashboard",
-  "description": "A beautiful new tab experience with real-time weather, daily quotes, task management, and a customizable interface.",
-  "version": "1.0.0",
+  "short_name": "Momentum",
+  "version": "2.0.0",
+  "description": "A fast, private new-tab dashboard: search, shortcuts, weather, tasks, focus timer, notes and a daily quote.",
+  "minimum_chrome_version": "114",
   "icons": {
-    "16": "icon-16.png",
-    "32": "icon-32.png",
-    "48": "icon-48.png",
-    "128": "icon-128.png"
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage", "geolocation"],
-  "host_permissions": [
-    "https://api.openweathermap.org/*",
-    "https://api.unsplash.com/*",
-    "https://images.unsplash.com/*",
-    "https://api.pexels.com/*",
-    "https://images.pexels.com/*",
-    "https://ipapi.co/*",
-    "https://api.quotable.io/*"
-  ]
+  "action": {
+    "default_title": "Momentum Dashboard",
+    "default_popup": "popup/index.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "settings/index.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "alarms"],
+  "optional_permissions": ["notifications"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'self'; connect-src 'self' https://api.open-meteo.com https://geocoding-api.open-meteo.com https://api.bigdatacloud.net https://api.openweathermap.org https://api.unsplash.com https://api.pexels.com https://api.freeapi.app"
+  }
 }
