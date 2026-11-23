@@ -20,7 +20,7 @@ First production-ready release. One consolidated branch (`main`) replaces `maste
 - Cross-context sync between the popup and all open tabs.
 - 60+ bundled quotes (offline) with optional online source.
 - Optional Unsplash / Pexels photo backgrounds using the user's own key; image URL and local image upload.
-- Test suite: 50 Vitest unit/component tests and 13 Playwright end-to-end tests (load-unpacked smoke test, persistence, import/export, axe accessibility in both themes).
+- Test suite: 51 Vitest unit/component tests and 14 Playwright end-to-end tests (plus an optional live-network check) (load-unpacked smoke test, persistence, import/export, axe accessibility in both themes).
 - Cross-platform build tooling: `postbuild-extension.mjs`, `validate-extension.mjs`, `package-extension.mjs`, icon generator; CI and GitHub Pages workflows.
 
 ### Changed
