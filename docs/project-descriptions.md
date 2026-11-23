@@ -10,7 +10,7 @@ Chrome New Tab dashboard extension with weather updates, quote inspiration, todo
 
 ### Detailed Description
 
-This project is a modern Chrome extension that replaces the default new tab page with a personalized dashboard. It is built with Next.js, React, Redux Toolkit, and Tailwind CSS, then exported for Manifest V3 extension usage. Users can configure background image sources, manage todos, view weather by location or city search, and adjust visual preferences through a settings modal.
+This project is a modern Chrome extension that replaces the default new tab page with a personalized dashboard. It is built with Next.js, React, TypeScript, Redux Toolkit, and Tailwind CSS, then exported for Manifest V3 extension usage. Users get a search bar with engine selector, quick links, weather with a 5-day forecast, prioritized tasks, a Pomodoro focus timer, notes, a daily quote, a command palette (Ctrl+K), light/dark themes, customizable backgrounds, and JSON backup/restore. It needs no API keys and requests only the `storage` and `alarms` permissions.
 
 ## 2) Formal Enterprise and SEO Version
 
@@ -26,11 +26,11 @@ This Chrome extension replaces the default new tab page with a centralized produ
 
 Core capabilities:
 
-1. Real-time weather dashboard with city search and location-aware forecasts
-2. Built-in todo management for daily task tracking and execution
-3. Motivational quote feed for engagement and routine consistency
-4. Customizable new tab backgrounds powered by Unsplash, Pexels, or user-defined image URLs
-5. Personalized settings to support individual workflow preferences
+1. Real-time weather dashboard with city search, location-aware forecasts, and a 5-day outlook (keyless Open-Meteo by default)
+2. Built-in task management with priorities, filters, and a Pomodoro focus timer
+3. Search bar with engine selector, quick links, and a command palette for fast navigation
+4. Daily quote, scratchpad notes, and customizable backgrounds (built-in gradients, Unsplash/Pexels with the user's own key, custom URL, or upload)
+5. Personalized settings, accessible keyboard-first UX, and JSON backup/restore
 
 Business and professional value:
 
@@ -64,11 +64,11 @@ Transform the default Chrome new tab into a professional productivity workspace.
 
 This extension provides a centralized dashboard for day-to-day execution with:
 
-1. Real-time weather updates by city or current location
-2. Built-in todo tracking for daily task management
-3. Motivational quote feed for routine consistency
-4. Customizable backgrounds from Unsplash, Pexels, or custom image URLs
-5. Personal settings for a tailored new tab experience
+1. Real-time weather with forecast by city or current location
+2. Prioritized tasks and a Pomodoro focus timer
+3. Search with engine selector, quick links, and a Ctrl+K command palette
+4. Daily quote, scratchpad, and customizable backgrounds and themes
+5. Private by design: no account, no analytics, minimal permissions
 
 Why teams and professionals use it:
 
@@ -83,7 +83,7 @@ chrome new tab dashboard, productivity chrome extension, weather new tab extensi
 
 ### Permissions Note
 
-Location permission is used only when users enable current-location weather functionality.
+Required permissions: `storage` (save settings/tasks locally) and `alarms` (focus-timer alerts). `notifications` is optional and only requested if the user enables timer notifications. Location uses the standard browser prompt and is only requested when the user chooses "Locate me".
 
 ## 4) GitHub About and Topics
 
